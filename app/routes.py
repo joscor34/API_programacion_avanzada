@@ -4,6 +4,8 @@
 from flask_restful import Resource
 from flask import request #<- Nos permite interceptar la info del usuario
 
+from .methods import user_register
+
 
 # Creamos un recurso que nuestra aplicación puede cargar (METODO)
 class HolaMundo(Resource):
@@ -12,6 +14,7 @@ class HolaMundo(Resource):
     return {'Mensaje': 'Hola mundo desde GET'}
 
   def post(self):
+    
     return {'Mensaje': 'Hola mundo desde POST'}
 
 class Registro(Resource):
@@ -25,13 +28,9 @@ class Registro(Resource):
     password = user_info.get('password')
     telefono = user_info.get('telefono')
 
-    
+    respuesta, status = user_register(username, email, telefono, password)    
 
-    return {
-      'status': 'Registrado',
-      'nombre': username,
-      'correo': email
-      }
+    return respuesta, status
 
 
 # Van a crear un recurso para el login, le van a asigar una ruta y su servidor tiene que recibir
