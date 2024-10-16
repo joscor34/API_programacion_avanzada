@@ -5,7 +5,7 @@ from flask_restful import Resource
 from flask import request #<- Nos permite interceptar la info del usuario
 
 from .methods import user_register
-
+from .methods import user_login
 
 # Creamos un recurso que nuestra aplicación puede cargar (METODO)
 class HolaMundo(Resource):
@@ -44,11 +44,9 @@ class Login(Resource):
     email = user_info.get('correo')
     password = user_info.get('password')
 
+    respuesta, status = user_login(email, password)
 
-    return {
-      'status': 'Accepted',
-      'email': email,
-    }
+    return respuesta, status
 
 
 
