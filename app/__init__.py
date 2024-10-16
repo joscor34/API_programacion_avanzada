@@ -4,7 +4,6 @@
 from flask import Flask # <- Nos permite crear el servior
 from flask_restful import Api # <- Crear la funcionalidad de API
 
-
 # Cuando queramos importar un archivo usamos un .
 from .routes import APIRoutes
 
