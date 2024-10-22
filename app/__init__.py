@@ -12,7 +12,7 @@ from .config import Config
 
 
 # Desde el archivo extensions importamos la variable "db"
-from .extensions import db
+from .extensions import db, jwt
 
 # Creamos una función que configure el servidor
 def configurar_app():
@@ -24,6 +24,10 @@ def configurar_app():
 
   # Le decimos a mi base de datos que se va a inicializar en nuestra app
   db.init_app(app)
+
+  # Le dicmos a JWT que se va a inicializar en nuestra app
+  jwt.init_app(app)
+
 
   # Se ejecuta mientras el servidor se está montado
   with app.app_context():
