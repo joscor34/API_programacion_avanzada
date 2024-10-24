@@ -1,7 +1,7 @@
 # Se va encargar de montar el servidor
 # flask es la librería
 # Flask (con F mayúscula es el módulo)
-from flask import Flask # <- Nos permite crear el servior
+from flask import Flask, jsonify # <- Nos permite crear el servior
 from flask_restful import Api # <- Crear la funcionalidad de API
 
 # Cuando queramos importar un archivo usamos un .
@@ -10,9 +10,12 @@ from .routes import APIRoutes
 # Desde el archivo config importamos la clase "Config"
 from .config import Config
 
+from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
+
 
 # Desde el archivo extensions importamos la variable "db"
 from .extensions import db, jwt
+
 
 # Creamos una función que configure el servidor
 def configurar_app():
@@ -43,6 +46,32 @@ def configurar_app():
   # Configuramos las rutas y los recursos
   rutas = APIRoutes()
   rutas.init_api(api)
+
+  # Manejador para cuando no se proporciona un token
+  @app.errorhandler(NoAuthorizationError)
+  def handle_no_token(e):
+      return jsonify({
+          "message": "Se requiere un token de autorización.",
+          "error": str(e)
+      }), 401
+
+  # Manejador para cuando el token es inválido o tiene un formato incorrecto
+  @app.errorhandler(InvalidHeaderError)
+  def handle_invalid_token(e):
+      return jsonify({
+          "message": "Token inválido o mal formado.",
+          "error": str(e)
+      }), 422
+
+  # Manejador para cuando el token ha expirado
+  @jwt.expired_token_loader
+  def expired_token_callback(jwt_header, jwt_payload):
+      return jsonify({
+          "message": "El token ha expirado.",
+          "error": "token_expired"
+      }), 401
+
+
 
 
   return app

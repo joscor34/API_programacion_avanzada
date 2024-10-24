@@ -68,7 +68,11 @@ class Restringido(Resource):
 
   @jwt_required() # Verificamos si mi usuario está autoruzado
   def get(self):
-    return {'Mensaje': 'Felicidades estás loggeado'}
+    pagina = render_template('restringido.html')
+
+    respuesta = make_response(pagina)
+
+    return respuesta
 
 
 # Simplemente se va a encargar de darle rutas a mis recursos

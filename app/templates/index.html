@@ -10,7 +10,44 @@
 
     <p>Esta es la página de inicio</p>
 
-    <a href="/restringido">Ruta restringida</a>
+    <a href="#" id="rutaRestringida">Ruta restringida</a>
     <a href="/login">Inicio de sesion</a>
+
+    <script>
+        document.getElementById('rutaRestringida').addEventListener('click', async function(event) {
+            event.preventDefault(); // Evitar la navegación predeterminada
+            
+            // Obtener el token del localStorage
+            const token = localStorage.getItem('access_token');
+
+            if (!token) {
+                alert('No estás autenticado. Por favor, inicia sesión.');
+                window.location.href = '/login'; // Redirigir a la página de login si no hay token
+                return;
+            }
+
+            try {
+                // Enviar la solicitud GET a la ruta restringida con el token en el header
+                const response = await fetch('/restringido', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    // Si la respuesta es exitosa, renderizar el contenido
+                    const data = await response.text();
+                    document.body.innerHTML = data; // Mostrar la página restringida en el cuerpo
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Ocurrió un error en el servidor.');
+            }
+        });
+    </script>
 </body>
 </html>

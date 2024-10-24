@@ -6,7 +6,6 @@ from flask_jwt_extended import create_access_token
 
 from datetime import timedelta
 
-
 def user_register(nombre, email, telefono, password):
   
   # Buscar si el correo del usuario ya está registrado
@@ -57,6 +56,7 @@ def user_login(correo, password):
   # Verificamos que la contraseña coincida con la que está en la DB (True o False)
   elif usuario_existente.verificar_password(password = password):
 
+    # Definimos un tiempo de caducidad para el token
     caducidad = timedelta(minutes=2)
 
     # Le creamos un token de acceso
